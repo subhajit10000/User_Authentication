@@ -1,37 +1,35 @@
-import User from '../models/user.model.js';
-import ApiError from '../utils/apiError.js';
-import AsyncHandler from 'express-async-handler';
-import { verifyAccessToken } from '../config/jwt.js';
-import logger from '../utils/logger.js';
+import User from "../models/User.js";
+import  ApiError  from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { verifyAccessToken } from "../config/jwt.js";
+import logger from "../utils/logger.js";
 
-const authMiddleware = AsyncHandler(async (req, res, next) => {
+const authMiddleware = asyncHandler(async (req, res, next) => {
     let token;
 
     const authHeader = req.headers['authorization'];
     if (authHeader && authHeader.startsWith('Bearer ')) {
-        token = authHeader.split(' ')[1];
+        token = authHeader.split(" ")[1] 
+        // token = authHeader.replace("Bearer ","")
     }
-    if (!token && !req.cookies?.accessToken) {
+    if (!token && req.cookies?.accessToken) {
         token = req.cookies.accessToken;
     }
     if (!token) {
-        throw new ApiError(401, 'Unauthorized. please login first');
+        throw new ApiError(401, "Access token is required")
     }
-
-    const decode = verifyAccessToken(token);   
+    const decode = verifyAccessToken(token);
     const user = await User.findById(decode.id);
     logger.info(user);
-
     if (!user) {
-        throw new ApiError(401, 'user not found');
+        throw new ApiError(401, "User not found.")
     }
-
     if (user.isBlocked) {
-        throw new ApiError(403, 'your account is blocked');
+        throw new ApiError(403, "Your account is blocked.")
     }
-
     req.user = user;
     next();
-});
+
+})
 
 export default authMiddleware;
