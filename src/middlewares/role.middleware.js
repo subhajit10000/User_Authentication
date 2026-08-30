@@ -1,14 +1,26 @@
-import ApiError from "../utils/apiError";
+import ApiError from "../utils/ApiError.js";
 
-const Authorize = (...roles) => {
+
+const authorize = (...roles) => {
     return (req, res, next) => {
         if (!req.user) {
-            return next(new ApiError(401, "Unauthorized. please login first"));
+            return next(
+                new ApiError(401, "Unauthorized. Please login first.")
+            );
         }
+
+
+
         if (!roles.includes(req.user.role)) {
-            return next(new ApiError(401, "Unauthorized. you don't have permission to access this route"));
+            return next(
+                new ApiError(403, "Unauthorized. You don't have permission.")
+            );
         }
+
+
         next();
-    };
-};
-export default Authorize;
+    }
+}
+
+
+export default authorize;
