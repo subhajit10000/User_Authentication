@@ -1,34 +1,46 @@
-import mongoose from 'mongoose';
-//device information
+import mongoose from "mongoose";
+
+// device information
+
 
 const refreshTokenSchema = new mongoose.Schema(
     {
+
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
             index: true
         },
+
         token: {
             type: String,
-            required: true,
+            required: true
         },
-        expiresAt: {
+        expiredAt: {
             type: Date,
             required: true,
-            index: { expires: 0 } // This will automatically remove the document after the specified time
+            index: {
+                expires: 0,
+            }
         },
+
         userAgent: {
             type: String,
-            default: ""
+            default: "",
         },
         ipAddress: {
             type: String,
             default: ""
         }
+
     },
-    { timestamp: true }
+    {
+        timestamps: true,
+    }
 );
 
-const RefreshToken = mongoose.model("RefreshToken", refreshTokenSchema);
-export default RefreshToken;
+
+const refreshToken = mongoose.model("RefreshToken", refreshTokenSchema);
+
+export default refreshToken;
