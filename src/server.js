@@ -1,29 +1,30 @@
-import dns from "node:dns"
+import dns from 'dns';
 dns.setServers(['1.1.1.1', '8.8.8.8']);
 
-import env from "./config/env.js"
-import connectDB from "./database/index.js";
+import App from "./app.js";
+import env from "./config/env.js";
 import logger from "./utils/logger.js";
-import App from "./app.js"
-const PORT = env.PORT || 5000;
+
+import connectDB from "./database/index.js";
+const PORT = env.PORT || 5001;
 
 const startServer = async () => {
     try {
-
         await connectDB();
-        logger.info("Server started successfully");
+
+        logger.info('server to DB connection done')
 
         App.listen(PORT, () => {
-            console.log(
-                `Server running on http://localhost:${PORT}`);
-        
-            });
+            console.log(`server is running at http://localhost:${PORT}`);
+
+        });
 
     } catch (error) {
-        logger.error("Server Failed to Start");
+        logger.error('Server failed to start')
 
         process.exit(1);
     }
-};
+}
 
-startServer()
+
+startServer();
