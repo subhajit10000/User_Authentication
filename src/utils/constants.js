@@ -1,16 +1,15 @@
- export const USER_ROLES = {
+export const USER_ROLES = {
     ADMIN: "admin",
-    USER: "user"
-};
+    USER: "user",
+}
 
 export const TOKEN_TYPES = {
     ACCESS: "access",
     REFRESH: "refresh"
-};
+}
 
 export const ACCOUNT_STATUS = {
     ACTIVE: "active",
     BLOCKED: "blocked",
     PENDING: "pending"
-};
-
+}
