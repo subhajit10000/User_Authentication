@@ -1,6 +1,6 @@
-require('dotenv').config();
-const nodemailer = require('nodemailer');
-
+import dotenv from "dotenv";
+dotenv.config();
+import nodemailer from "nodemailer";
 
 const sendEmail = async (to, subject, text, html = null) => {
     try {
@@ -35,11 +35,4 @@ const sendEmail = async (to, subject, text, html = null) => {
     }
 }
 
-exports = sendEmail;
-// // Example usage
-// sendEmail(
-//     "recipient@example.com",
-//     "Test Email from Node.js",
-//     "Hello! This is a plain text email.",
-//     "<h1>Hello!</h1><p>This is an HTML email.</p>"
-// );
+export default sendEmail;
