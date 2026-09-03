@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import env from "../config/env.js";
 
 const hashPassword = async (password) => {
@@ -9,4 +9,4 @@ const comparePassword = async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
 };
 
-exports = { hashPassword, comparePassword };
+export { hashPassword, comparePassword };
