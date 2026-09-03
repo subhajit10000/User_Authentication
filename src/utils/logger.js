@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import util from "util";
 
 const LOG_LEVELS = {
     ERROR: "ERROR",
@@ -17,16 +18,15 @@ if (!fs.existsSync(LOG_DIRECTORY)) {
 }
 
 const getTimestamp = () => new Date().toLocaleString('en-IN', {
-  timeZone: 'Asia/Kolkata',
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  hour12: true // Set to false if you want 24-hour format
-});
-
+    timeZone: 'Asia/Kolkata',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    hour12: true 
+  });
 
 const getCurrentLogFile = () => {
     let index = 1;
@@ -66,21 +66,25 @@ const log = (level, message, meta = null) => {
 
     writeToFile(logString);
 
+    // Use depth: null so nested objects/arrays (e.g. validation error lists,
+    // full ApiError instances) aren't truncated to "[Object]" in the console.
+    const printable = util.inspect(output, { depth: null, colors: false });
+
     switch (level) {
         case LOG_LEVELS.ERROR:
-            console.error(output);
+            console.error(printable);
             break;
 
         case LOG_LEVELS.WARN:
-            console.warn(output);
+            console.warn(printable);
             break;
 
         case LOG_LEVELS.INFO:
-            console.info(output);
+            console.info(printable);
             break;
 
         default:
-            console.log(output);
+            console.log(printable);
     }
 };
 
