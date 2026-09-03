@@ -1,74 +1,77 @@
 import jwt from "jsonwebtoken";
 import env from "../config/env.js";
-import ApiError from "./ApiError.js";
+import ApiError from "./ApiError.js"
 
-// Generate Access Token
+
+// gen acc token
+
 const generateAccessToken = (user) => {
-  return jwt.sign(
-    {
-      id: user._id,
-      email: user.email,
-      role: user.role,
-      type: "access",
+    return jwt.sign({
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        type: "access",
     },
-    env.JWT_ACCESS_SECRET,
-    {
-      expiresIn: env.JWT_ACCESS_EXPIRES,
-      issuer: env.JWT_ISSUER,
-      audience: env.JWT_AUDIENCE,
-    },
-  );
+        env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn: env.ACCESS_TOKEN_EXPIRES,
+            issuer: env.JWT_ISSUER,
+            audience: env.JWT_AUDIENCE
+        }
+    )
 };
-
-// Generate Refresh Token
+// gen ref token
 const generateRefreshToken = (user) => {
-  return jwt.sign(
-    {
-      id: user._id,
-      type: "refresh",
-    },
-    env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: env.REFRESH_TOKEN_EXPIRES,
-      issuer: env.JWT_ISSUER,
-      audience: env.JWT_AUDIENCE,
-    },
-  );
-};
+    return jwt.sign(
+        {
+            id: user._id,
+            type: "refresh"
+        },
+        env.REFRESH_TOKEN_SECRET,
+        {
+            expiresIn: env.REFRESH_TOKEN_EXPIRES,
+            issuer: env.JWT_ISSUER,
+            audience: env.JWT_AUDIENCE
+        }
+    )
+}
 
-// Verify Access Token
+
+// ver acc token
+
 const verifyAccessToken = async (token) => {
-  try {
-    return jwt.verify(token, env.JWT_ACCESS_SECRET, {
-      issuer: env.JWT_ISSUER,
-      audience: env.JWT_AUDIENCE,
-    });
-  } catch (error) {
-    throw new ApiError(401, "Invalid access token");
-  }
-};
+    try {
+        return jwt.verify(token, env.ACCESS_TOKEN_SECRET, {
+            issuer: env.JWT_ISSUER,
+            audience: env.JWT_AUDIENCE
+        })
+    } catch (error) {
+        throw new ApiError(401, "Invalid or Expired Access Token")
+    }
+}
+// ver ref token
 
-// Verify Refresh Token
 const verifyRefreshToken = async (token) => {
-  try {
-    return jwt.verify(token, env.REFRESH_TOKEN_SECRET, {
-      issuer: env.JWT_ISSUER,
-      audience: env.JWT_AUDIENCE,
-    });
-  } catch (error) {
-    throw new ApiError(401, "Invalid refresh token");
-  }
-};
+    try {
+        return jwt.verify(token, env.REFRESH_TOKEN_SECRET, {
+            issuer: env.JWT_ISSUER,
+            audience: env.JWT_AUDIENCE
+        })
+    } catch (error) {
+        throw new ApiError(401, "Invalid or Expired Refresh Token")
+    }
+}
 
-// Decode Token
+
 const decodeToken = async (token) => {
-  return jwt.decode(token);
-};
+    return jwt.decode(token);
+}
+
 
 export {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyAccessToken,
-  verifyRefreshToken,
-  decodeToken,
-};
+    generateAccessToken,
+    generateRefreshToken,
+    verifyAccessToken,
+    verifyRefreshToken,
+    decodeToken
+}
